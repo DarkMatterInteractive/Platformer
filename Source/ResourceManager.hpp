@@ -41,10 +41,6 @@ class ResourceManager
 {
 public:
 
-	typedef ResourceManager< Texture::ID, sf::Texture >   TextureManager;
-	typedef ResourceManager< Font::ID, sf::Font >         FontManager;
-	typedef ResourceManager< Sound::ID, sf::SoundBuffer > SoundManager;
-
 	ResourceManager();
     
 	           void loadResource( ID id, const std::string& file );
@@ -56,6 +52,10 @@ private:
 
 	std::map< ID, std::unique_ptr< Resource > > m_resources;
 };
+
+typedef ResourceManager< Texture::ID, sf::Texture >   TextureManager;
+typedef ResourceManager< Font::ID, sf::Font >         FontManager;
+typedef ResourceManager< Sound::ID, sf::SoundBuffer > SoundManager;
 
 #include "ResourceManager.inl"
 
