@@ -13,17 +13,6 @@ class Game
 {
 public:
 
-	enum GameState
-	{
-		MainMenu,
-		Playing,
-		Paused,
-		Options,
-		Credits,
-		GameOver,
-		NumStates
-	};
-
 	Game();
 
 	void run();
@@ -40,10 +29,6 @@ private:
 
 	sf::Clock         m_clock;
 	sf::Time          m_unprocessedTime;
-
-	GameState         m_currState;
-
-	std::array< std::unique_ptr< SceneNode >, NumStates > m_states;
 
 	ResourceManager< Texture::ID, sf::Texture > m_textures;
 };
