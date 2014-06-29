@@ -51,18 +51,13 @@ private:
 	std::vector< State::StatePtr >                             m_stack;
 	std::vector< PendingChange >                               m_pendingList;
 	State::Context                                             m_context;
-	std::map< States::ID, State::StatePtr >                    m_factories;
-	//std::map< States::ID, std::function< State::StatePtr() > > m_factories;
+	std::map< States::ID, std::function< State::StatePtr() > > m_factories;
 };
 
-template < typename T >
+template< typename T >
 void StateStack::registerState( States::ID id )
 {
-	State::StatePtr state( new T( *this, m_context ) );
-
-	m_factories.insert( std::make_pair( id, std::move( state ) ) );
-
-	//m_factories[ id ] = [ this ] () { return State::StatePtr( new T( *this, m_context ) ); };
+	m_factories[ id ] = [ this ] () { return State::StatePtr( new T( *this, m_context ) ); };
 }
 
 #endif // STATE_STACK_HPP

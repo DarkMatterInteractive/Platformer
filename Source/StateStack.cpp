@@ -28,9 +28,7 @@ State::StatePtr StateStack::createState( States::ID id )
 
 	assert( found != m_factories.end() );
 
-	return std::move( found -> second );
-
-	//return found -> second();
+	return found -> second();
 }
 
 void StateStack::update( sf::Time dt )
