@@ -20,6 +20,20 @@ void ResourceManager< ID, Resource >::loadResource( ID id, const std::string& fi
 	assert( inserted.second );
 }
 
+template < typename ID, class Resource >
+std::unique_ptr< Resource > ResourceManager< ID, Resource >::removeResource( ID id )
+{
+	auto found = m_resources.find( id );
+
+	assert( found != m_resources.end() );
+
+	std::unique_ptr< Resource > resource = std::move( found -> second );
+
+	m_resources.erase( found );
+
+	return resource;
+}
+
 template< typename ID, class Resource >
 Resource& ResourceManager< ID, Resource >::getResource( ID id )
 {

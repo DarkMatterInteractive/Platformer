@@ -1,10 +1,16 @@
 #include "Game.hpp"
+#include "MainMenu.hpp"
+#include "GameState.hpp"
 
 Game::Game()
 	: m_window()
 	, m_event()
 	, m_clock()
 	, m_unprocessedTime( sf::Time::Zero )
+	, m_textures()
+	, m_fonts()
+	, m_sounds()
+	, m_states( State::Context( m_window, m_textures, m_fonts ) )
 {
 	std::ifstream windowConfig( "Config/WindowConfig.txt" );
 
@@ -27,6 +33,11 @@ Game::Game()
 
 	m_window.create( sf::VideoMode( width, height ), title );
 	m_window.setFramerateLimit( 60 );
+
+	loadResources();
+	registerStates();
+
+	m_states.pushState( States::MainMenu );
 }
 
 void Game::run()
@@ -47,22 +58,36 @@ void Game::run()
 		}
 
 		m_window.clear();
+		m_states.draw();
 		m_window.display();
 	}
 }
 
 void Game::update( sf::Time dt )
 {
-	
+	m_states.update( dt );
 }
 
 void Game::handleEvents()
 {
 	while ( m_window.pollEvent( m_event ) )
 	{
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Escape ) || m_event.type == sf::Event::Closed )
+		if ( m_event.type == sf::Event::Closed )
 		{
 			m_window.close();
 		}
+
+		m_states.handleEvent( m_event );
 	}
+}
+
+void Game::loadResources()
+{
+	//m_fonts.loadResource( Font::Arcade, "Resources/Fonts/arcade.ttf" );
+}
+
+void Game::registerStates()
+{
+	m_states.registerState< MainMenu >( States::MainMenu );
+	m_states.registerState< GameState >( States::Game );
 }

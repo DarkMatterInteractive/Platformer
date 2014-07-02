@@ -16,12 +16,6 @@ StateStack::PendingChange::PendingChange( Action a, States::ID id )
 
 }
 
-StateStack::PendingChange::PendingChange( Action a )
-	: action( a )
-{
-
-}
-
 State::StatePtr StateStack::createState( States::ID id )
 {
 	auto found = m_factories.find( id );

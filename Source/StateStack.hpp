@@ -22,24 +22,24 @@ public:
 	StateStack( State::Context context );
 
 	template < typename T >
-	void registerState( States::ID id );
+	void           registerState( States::ID id );
+		           
+	void           update( sf::Time dt );
+	void           draw();
+	void           handleEvent( const sf::Event& ev );
+		           
+	void           pushState( States::ID id );
+	void           popState();
+	void           clearStates();
 
-	void update( sf::Time dt );
-	void draw();
-	void handleEvent( const sf::Event& ev );
-
-	void pushState( States::ID id );
-	void popState();
-	void clearStates();
-
-	bool isEmpty() const { return m_stack.empty(); }
+	bool           isEmpty()    const { return m_stack.empty(); }
+	State::Context getContext() const { return m_context; }
 
 private:
 
 	struct PendingChange
 	{
-		PendingChange( Action a );
-		PendingChange( Action a, States::ID id );
+		PendingChange( Action a, States::ID id = States::None );
 
 		Action     action;
 		States::ID id;

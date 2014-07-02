@@ -24,7 +24,7 @@ namespace Font
 {
 	enum ID
 	{
-
+		Arcade
 	};
 };
 
@@ -43,10 +43,11 @@ public:
 
 	ResourceManager();
     
-	           void loadResource( ID id, const std::string& file );
+	                       void  loadResource( ID id, const std::string& file );
+	std::unique_ptr< Resource >  removeResource( ID id );
 
-	      Resource& getResource( ID id );
-	const Resource& getResource( ID ) const;
+	                   Resource& getResource( ID id );
+	const              Resource& getResource( ID ) const;
 
 private:
 

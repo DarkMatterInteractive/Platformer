@@ -42,8 +42,6 @@ void SceneNode::drawCurrent( sf::RenderTarget& target, sf::RenderStates states )
 {
 	// Leave blank
 	// Inheriting classes override this
-
-	target.draw( m_sprite, states );
 }
 
 void SceneNode::drawChildren( sf::RenderTarget& target, sf::RenderStates states ) const

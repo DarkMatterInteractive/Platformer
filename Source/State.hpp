@@ -11,6 +11,7 @@ namespace States
 {
 	enum ID
 	{
+		None,
 		MainMenu,
 		Options,
 		Credits,
@@ -42,13 +43,13 @@ public:
 
 	virtual void draw() = 0;
 	virtual bool update( sf::Time dt ) = 0;
-	virtual bool handleEvent( const sf::Event& event ) = 0;
+	virtual bool handleEvent( const sf::Event& ev ) = 0;
 
 protected:
 
 	void         requestStackPush( States::ID stateID );
 	void         requestStackPop();
-	void         requestStateClear();
+	void         requestStackClear();
 
 	Context      getContext() const { return m_context; }
 

@@ -8,6 +8,7 @@
 #include "Util.hpp"
 #include "SceneNode.hpp"
 #include "ResourceManager.hpp"
+#include "StateStack.hpp"
 
 class Game
 {
@@ -18,9 +19,10 @@ public:
 	void run();
 	void update( sf::Time dt );
 
-	void loadResources();
-
 	void handleEvents();
+	
+	void loadResources();
+	void registerStates();
 
 private:
 
@@ -30,7 +32,11 @@ private:
 	sf::Clock         m_clock;
 	sf::Time          m_unprocessedTime;
 
-	ResourceManager< Texture::ID, sf::Texture > m_textures;
+	TextureManager    m_textures;
+	FontManager       m_fonts;
+	SoundManager      m_sounds;
+
+	StateStack        m_states;
 };
 
 #endif // GAME_HPP
