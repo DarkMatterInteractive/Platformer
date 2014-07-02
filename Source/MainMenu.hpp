@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "State.hpp"
+#include "Container.hpp"
+#include "Button.hpp"
 
 class MainMenu : public State
 {
@@ -24,12 +26,9 @@ public:
 	virtual bool update( sf::Time dt );
 	virtual bool handleEvent( const sf::Event& ev );
 
-	        void updateOptions();
-
 private:
 
-	std::vector< sf::Text > m_options;
-	int                     m_optionsIndex;
+	GUI::Container m_container;
 };
 
 #endif // MAIN_MENU_HPP

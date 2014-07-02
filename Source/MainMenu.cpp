@@ -2,47 +2,46 @@
 
 MainMenu::MainMenu( StateStack& stack, Context context )
 	: State( stack, context )
-	, m_options()
-	, m_optionsIndex( 0 )
+	, m_container()
 {
 	std::cout << "MainMenu State Entered..." << std::endl;
 
 	getContext().fonts -> loadResource( Font::Arcade, "Resources/Fonts/arcade.ttf" );
 
-	sf::Text play;
-	play.setFont( getContext().fonts -> getResource( Font::Arcade ) );
-	play.setString( "Play" );
-	play.setCharacterSize( 40 );
-	play.setOrigin( play.getLocalBounds().width / 2, play.getLocalBounds().height / 2 );
-	play.setPosition( getContext().window -> getView().getSize() / 2.0f );
+	auto play = std::make_shared< GUI::Button >( getContext() );
+	play -> setPosition( getContext().window -> getView().getSize() / 2.0f );
+	play -> setText( "Play" );
+	play -> setCharacterSize( 40 );
+	play -> setCallback( [ this ] () 
+	{
+		requestStackPop();
+		requestStackPush( States::Game );
+	});
 
-	sf::Text options;
-	options.setFont( getContext().fonts -> getResource( Font::Arcade ) );
-	options.setString( "Options" );
-	options.setCharacterSize( 40 );
-	options.setOrigin( options.getLocalBounds().width / 2, options.getLocalBounds().height / 2 );
-	options.setPosition( play.getPosition().x, play.getPosition().y + ( play.getCharacterSize() ) );
+	auto options = std::make_shared< GUI::Button >( getContext() );
+	options -> setPosition( play -> getPosition().x, play -> getPosition().y + play -> getCharacterSize() );
+	options -> setText( "Options" );
+	options -> setCharacterSize( 40 );
 
-	sf::Text credits;
-	credits.setFont( getContext().fonts -> getResource( Font::Arcade ) );
-	credits.setString( "Credits" );
-	credits.setCharacterSize( 40 );
-	credits.setOrigin( credits.getLocalBounds().width / 2, credits.getLocalBounds().height / 2 );
-	credits.setPosition( options.getPosition().x, options.getPosition().y + ( play.getCharacterSize() ) );
+	auto credits = std::make_shared< GUI::Button >( getContext() );
+	credits -> setPosition( options -> getPosition().x, options -> getPosition().y + options -> getCharacterSize() );
+	credits -> setText( "Credits" );
+	credits -> setCharacterSize( 40 );
 
-	sf::Text exit;
-	exit.setFont( getContext().fonts -> getResource( Font::Arcade ) );
-	exit.setString( "Exit" );
-	exit.setCharacterSize( 40 );
-	exit.setOrigin( exit.getLocalBounds().width / 2, exit.getLocalBounds().height / 2 );
-	exit.setPosition( credits.getPosition().x, credits.getPosition().y + ( play.getCharacterSize() ) );
+	auto exit = std::make_shared< GUI::Button >( getContext() );
+	exit -> setPosition( credits -> getPosition().x, credits -> getPosition().y + credits -> getCharacterSize() );
+	exit -> setText( "Exit" );
+	exit -> setCharacterSize( 40 );
+	exit -> setCallback( [ this ] () 
+	{
+		requestStackClear();
+		getContext().window -> close();
+	});
 
-	m_options.push_back( play );
-	m_options.push_back( options );
-	m_options.push_back( credits );
-	m_options.push_back( exit );
-
-	updateOptions();
+	m_container.pack( play );
+	m_container.pack( options );
+	m_container.pack( credits );
+	m_container.pack( exit );
 }
 
 MainMenu::~MainMenu()
@@ -54,10 +53,7 @@ MainMenu::~MainMenu()
 
 void MainMenu::draw()
 {
-	for ( sf::Text& t : m_options )
-	{
-		getContext().window -> draw( t );
-	}
+	getContext().window -> draw( m_container );
 }
 
 bool MainMenu::update( sf::Time dt )
@@ -67,80 +63,7 @@ bool MainMenu::update( sf::Time dt )
 
 bool MainMenu::handleEvent( const sf::Event& ev )
 {
-	if ( ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Return )
-	{
-		switch ( m_optionsIndex )
-		{
-		case Play:
-			{
-				requestStackPop();
-				requestStackPush( States::Game );
-			}
-			break;
-
-		case Options:
-			{
-
-			}
-
-		case Credits:
-			{
-
-			}
-			break;
-
-		case Exit:
-			{
-				getContext().window -> close();
-			}
-			break;
-		}
-	}
-
-	if ( ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Up )
-	{
-		if ( m_optionsIndex > 0 )
-		{
-			m_optionsIndex--;
-		}
-
-		else
-		{
-			m_optionsIndex = m_options.size() - 1;
-		}
-
-		updateOptions();
-	}
-
-	else if ( ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Down )
-	{
-		if ( m_optionsIndex < m_options.size() - 1 )
-		{
-			m_optionsIndex++;
-		}
-
-		else
-		{
-			m_optionsIndex = 0;
-		}
-
-		updateOptions();
-	}
+	m_container.handleEvent( ev );
 
 	return false;
-}
-
-void MainMenu::updateOptions()
-{
-	if ( m_options.empty() )
-	{
-		return;
-	}
-
-	for ( sf::Text& t : m_options )
-	{
-		t.setColor( sf::Color::White );
-	}
-
-	m_options[ m_optionsIndex ].setColor( sf::Color::Cyan );
 }
